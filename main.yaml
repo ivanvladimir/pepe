@@ -1,0 +1,128 @@
+# Conversation example for simple hello and ask a name
+
+settings:
+    system_name: "[blue]Ricardo[/blue]"
+    system_name_html: "<span style='color:blue'>Ricardo</span>"
+    user_name: "[aquamarine1]Usuario[/aquamarine1]"
+    user_name_html: "<span style='color:blue'>Usuario</span>"
+
+
+url_apis:
+    chatgpt: "http://127.0.0.1:8010/chatgpt/"
+
+templates:
+    - 'resources/messages.yaml'
+
+prompts:
+    - 'resources/prompts.yaml'
+
+strategies:
+    greet:
+        - say GREET
+
+    emergency:
+        - say "Estás pasando una emergencia, por favor marca el 911 para que te atiendan"
+        - stop
+
+    response_to_greet:
+      - execute self.slots['v1_greet']=self.slots['v1_res']
+      - post chatgpt generate_response 'messages':[{'role':'system', 'content':'Regresa el saludo breve, con poca emoción y no ofrezcas apoyo. Ejemplos Hola doctora gracias por recibirme, mucho gusto doctor gracias por verme.'},{'role':'user','content':v1_greet}] response
+      - say response['response'] 
+
+    response_to_question:
+      - post chatgpt generate_response 'messages':[{'role':'system', 'content':'Responde la siguiente pregunta de forma breve, con poca emoción.'},{'role':'system', 'content':context},{'role':'user','content':question}] response
+      - say response['response'] 
+
+    v1:
+      - execute self.slots['v1_paciente']=self.prompts['v1_paciente']
+      - execute self.slots['v1_tipo']=self.prompts['v1_tipo']
+      - say "Me enviaron con usted para que me oriente"
+      - set_slot continue_stage True
+      - set_slot count 0
+      - while continue_stage==True then solve eval_v1
+
+    continue_false:
+      - set_slot continue_stage False
+
+    save_question_v1:
+      - execute self.slots['question']=self.slots['v1_res']
+      - execute self.slots['context']=self.slots['v1_paciente']
+
+    eval_v1:
+      - input v1_res
+      - post chatgpt generate_response 'messages':[{'role':'system', 'content':v1_tipo},{'role':'user','content':v1_res}] response
+      - set_slot response response['response']
+      - solve save_question_v1
+      - say response
+      - if response=='personal_question' then solve response_to_question
+      - if response=='confidential' then say "Que bueno que esto es confidencial"
+      - if response=='introduction' then solve response_to_greet
+      - if response=='continuation' then solve continue_false
+      - if response=='continuation' then say "Últimamente he notado algunos problemas, me dicen que tomo mucho"
+      - execute self.slots['count']+=1
+      - if count>=5 then solve continue_false
+
+    v2:
+      - execute self.slots['v2_paciente']=self.prompts['v2_paciente']
+      - execute self.slots['v2_tipo']=self.prompts['v2_tipo']
+      - say "Francamente no sé qué hacer. Últimamente me he sentido muy mal."
+      - set_slot continue_stage True
+      - set_slot count 0
+      - while continue_stage==True then solve eval_v2
+
+    save_question_v2:
+      - execute self.slots['question']=self.slots['v2_res']
+      - execute self.slots['context']=self.slots['v2_paciente']
+
+    eval_v2:
+      - input v2_res
+      - post chatgpt generate_response 'messages':[{'role':'system', 'content':v2_tipo},{'role':'user','content':v2_res}] response
+      - set_slot response response['response']
+      - say response
+      - solve save_question_v2
+      - if response=='abstinence' then solve response_to_question
+      - if response=='intoxication' then solve response_to_question
+      - if response=='last_drink' then solve response_to_question
+      - if response=='last_drink' then solve continue_false
+      #- if response=='relaxation' then solve relaxation
+      - if response=='other_substance' then solve response_to_question
+      - execute self.slots['count']+=1
+      - if count>=5 then solve continue_false
+
+    v3:
+      - execute self.slots['v3_paciente']=self.prompts['v3_paciente']
+      - execute self.slots['v3_tipo']=self.prompts['v3_tipo']
+      - say "He notado que bebo mucho más que antes."
+      - set_slot continue_stage True
+      - set_slot count 0
+      - while continue_stage==True then solve eval_v3
+
+    save_question_v3:
+      - execute self.slots['question']=self.slots['v3_res']
+      - execute self.slots['context']=self.slots['v3_paciente']
+
+    eval_v3:
+      - input v3_res
+      - post chatgpt generate_response 'messages':[{'role':'system', 'content':v3_tipo},{'role':'user','content':v3_res}] response
+      - set_slot response response['response']
+      - say response
+      - solve save_question_v3
+      - if response=='indaga' then solve response_to_question
+      - if response=='indaga_deep' then solve response_to_question
+      - if response=='indaga_shallow' then solve response_to_question
+      #- if response=='relaxation' then solve relaxation
+      - execute self.slots['count']+=1
+      - if count>=5 then solve continue_false
+
+
+
+
+script:
+    - solve greet
+    - solve v1
+    - solve v2
+    - solve v3
+  
+
+
+
