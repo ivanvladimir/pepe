@@ -168,7 +168,7 @@ body {
 
 .app_button_1 {
 	width: 140px;
-	background-color: #a3d063;
+	background-color: #00217e;
 	border-radius: 50px;
 	cursor: pointer;
 	padding: 12px;
@@ -212,3 +212,29 @@ body {
 .footer {
 	background-color: #002f5d;
 }
+
+.centered-list {
+  list-style-type: none;  /* Remove bullet points */
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.centered-list li {
+  text-align: center;  /* Center text horizontally */
+  margin-bottom: 20px; /* Add space between items */
+  font-weight: 500;
+}
+
+.centered-list img {
+  display: block;      /* Ensures the image is treated as a block-level element */
+  margin: 0 auto;      /* Center the image horizontally */
+}
+
+.centered-list p {
+  margin: 10px 0 0 0;  /* Add space above the text */
+}
+
+

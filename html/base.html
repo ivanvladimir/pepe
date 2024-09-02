@@ -24,7 +24,7 @@
   </head>
   <body class="d-flex flex-column h-100">
     	{% block script %}{% endblock %}
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00217e;">
 	  <div class="container-fluid">
 		<a class="navbar-brand" href="#">🧑 PEPE</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,25 +87,26 @@
 
     <footer class="footer mt-auto py-3 bg-body-tertiary">
 	<div class="container">
-	<div class="row align-items-start">
-	<div class="col">
-		<ul>
-		<li>UMIRA</li>
-		<li>Facultad de Psicología</li>
-		</ul>
-	</div>
-	<div class="col">
-		<ul>
-		<li>Laboratorio L52+</li>
-		<li>IIMAS</li>
-		</ul>
-	</div>
-	<div class="col">
-		<ul>
-		<li>UNAM</li>
-		<li>Río Arronte Fundación</li>
-		</ul>
-	</div>
+	<div class="row align-items-center">
+		<div class="col">
+			<ul class="centered-list">
+			<li><a href=""><img width="40" src="{{url_for('static',path='umiiba.jpg')}}"></a><span>UMIIBA</span></a></li>
+			<li><a href="https://www.psicologia.unam.mx/"><img width="40" src="{{url_for('static',path='psicología.jpg')}}"></a><span>Facultad de Psicología</span></li>
+			</ul>
+		</div>
+		<div class="col">
+			<ul class="centered-list">
+
+			<li><a href="https://l52mas.gitlab.io/"><img width="40" src="{{url_for('static',path='l52mas.png')}}"></a><span>Laboratorio L52+</span></li>
+			<li><a href="https://www.iimas.unam.mx/"><img width="40" src="{{url_for('static',path='iimas.png')}}"></a><span>IIMAS</span></li>
+			</ul>
+		</div>
+		<div class="col">
+			<ul class="centered-list">
+			<li><a href="https://www.unam.mx/"><img height="40" src="{{url_for('static',path='unam.png')}}"></a><span>UNAM</span></li>
+			<li><a href="https://fundaciongonzalorioarronte.org/"><img height="40" src="{{url_for('static',path='rio_arronte.jpg')}}"></a><span>Fundación Río Arronte</span></li>
+			</ul>
+		</div>
 	</div>
     </footer>
 

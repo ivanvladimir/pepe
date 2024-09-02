@@ -15,9 +15,9 @@
                 var ws = new WebSocket('{{protocol}}://{{server}}' + namespace+`${client_id}`);
             }
             ws.addEventListener("open", (event) => {
-                var preferences={};
+            var preferences={};
                 {% for k,v in data.items() %}
-                preferences["{{k}}"]="{{v}}";
+                	preferences["{{k}}"]="{{v}}";
                 {% endfor %}
                 ws.send(JSON.stringify({'cmd':'start','conversation':"{{chat_name}}",'data':preferences }));
             });
@@ -43,7 +43,7 @@
                     msgCount += 1;
       			    return false;
                 }
-    		}
+    	    }
 
             // Get the input field
             var input = document.getElementById("msg_input");
@@ -59,41 +59,64 @@
                         }
             });
 
+	    var to_continue=true;
+
             ws.onmessage = function(event) {
-				data=JSON.parse(event.data);
-                // SAY
-				if(data.cmd=="say"){
-                    html = converter.makeHtml(data.msg);
-                    showBotMessage(html,getCurrentTimestamp());
-                    sleep(400);
-                    //let utter = new SpeechSynthesisUtterance();
-                    //utter.lang = 'es-MX';
-                    //utter.text = data.msg;
-                    //utter.volume = 0.5;
-                    // speak
-                    //window.speechSynthesis.speak(utter);
+			data=JSON.parse(event.data);
+                	// SAY
+			if(data.cmd=="say"){
+                    		html = converter.makeHtml(data.msg);
+                    		showBotMessage(html,getCurrentTimestamp());
+                    		sleep(400);
 				};
-                // Finish
-	            if(data.cmd=="finish"){
-                    document.getElementById('msg_input').disabled = true;
-                    document.getElementById('chat_window').disabled = true;
-                    document.getElementById('bye_message').removeAttribute('hidden');
-                    window.scrollTo(0, document.body.scrollHeight);
-				};
+                	// Finish
+	            	if(data.cmd=="finish"){
+                    		document.getElementById('msg_input').disabled = true;
+                    		document.getElementById('chat_window').disabled = true;
+                    		document.getElementById('bye_message').removeAttribute('hidden');
+                    		window.scrollTo(0, document.body.scrollHeight);
+				to_continue=false;
+			};
             };
 
+
             ws.onclose = function(e) {
-                    console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+                    console.log('Socket is closed.');
+     		    document.getElementById('msg_input').disabled = true;
+                    document.getElementById('chat_window').disabled = true;
+		    if(to_continue){
+			console.log('Not finished normal. Reconnect will be attempted in 1 second.', e.reason);
                         if(port.length>0){
-                                var ws = new WebSocket('{{protocol}}://{{server}}:{{port}}' + namespace+`${client_id}`);
+                                ws = new WebSocket('{{protocol}}://{{server}}:{{port}}' + namespace+`${client_id}`);
                             }else{
-                                var ws = new WebSocket('{{protocol}}://{{server}}' + namespace+`${client_id}`);
-                        }
-                  };
+                                ws = new WebSocket('{{protocol}}://{{server}}' + namespace+`${client_id}`);
+                            }
+    				document.getElementById('msg_input').disabled = false;
+                    		document.getElementById('chat_window').disabled = false;
+		 
+			}else{
+				document.getElementById('close_message').removeAttribute('hidden');
+                    		window.scrollTo(0, document.body.scrollHeight);
+			}
+                    };
 
             ws.onerror = function(err) {
-                      console.error('Socket encountered error: ', err.message, 'Closing socket');
-                      ws.close();
+                    console.log('Socket had an error.');
+		    document.getElementById('msg_input').disabled = true;
+                    document.getElementById('chat_window').disabled = true;
+		    if(to_continue){
+			console.log('Not finished normal. Reconnect will be attempted in 1 second.', e.reason);
+                        if(port.length>0){
+                                ws = new WebSocket('{{protocol}}://{{server}}:{{port}}' + namespace+`${client_id}`);
+                            }else{
+                                ws = new WebSocket('{{protocol}}://{{server}}' + namespace+`${client_id}`);
+                        }
+      		    document.getElementById('msg_input').disabled = false;
+                    document.getElementById('chat_window').disabled = false;
+		     	}else{
+				document.getElementById('error_message').removeAttribute('hidden');
+                    		window.scrollTo(0, document.body.scrollHeight);
+			}
                     };
         });
     </script>
@@ -104,7 +127,7 @@
 		<div class="row padded_row">
 				<div id="chat_window" class="chat_window">
 					<div class="top_menu">
-                        <div class="title">Entrena 🧑</div>
+                        <div class="title">PEPE 🧑</div>
 					</div>
 
 					<!-- dynamically rendered -->
@@ -118,14 +141,13 @@
 				</div>
 		</div>
 		<div id="bye_message" class="row padded_row" hidden='True'>
-            <div class="col-md-4 mx-auto">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                <h5 class="card-title">¡Gracias por interactuar!</h5>
-                </div>
-            </div>
-            </div>
-        </div>
-</div>
-
+		    <div class="col-md-4 mx-auto">
+		    <div class="card" style="width: 18rem;">
+			<div class="card-body">
+			<h5 class="card-title">¡Gracias por interactuar!</h5>
+			</div>
+		    </div>
+		    </div>
+		</div>
+	</div>
 {% endblock %}
