@@ -2,6 +2,6 @@
 title: Principal
 ---
 
-# Hola mundo
+# PEPE
 
-Este es un pequeño ejemplo de como funciona Chatvoice
+Programa de Entrenamiento con Pacientes Estandarizados
