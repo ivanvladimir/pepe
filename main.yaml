@@ -1,0 +1,37 @@
+conversations:
+  - name.yaml
+
+plugins:
+  - filters.py
+
+templates:
+  - messages.yaml
+
+prompts:
+  - prompts.yaml
+
+strategies:
+    excelent:
+        - say "me da mucho gusto que estés bien"
+    sorry:
+        - say "siento que no te encuentres bien"
+    something_else:
+        - say "creo que me dijiste algo que no entiendo bien"
+
+slots:
+  options: 
+    bien: good
+    mal: bad
+
+script:
+  - info slots
+  - tag "Saludo"
+  - say GREET
+  - llm wheather_opening | say
+  - if not name then solve name
+  - tag "Preguntas" "Se hacen algunas preguntas para establecer report"
+  - say "¿como estás hoy, {name}?"
+  - listen status | .keyword options | set status
+  - if status == "good" then solve excelent
+  - if status == "bad" then solve sorry
+  - if not status == "good" or status == "bad" then solve something_else
