@@ -1,5 +1,5 @@
 conversations:
-  - name.yaml
+  - stage1.yaml
 
 plugins:
   - filters.py
@@ -11,27 +11,22 @@ prompts:
   - prompts.yaml
 
 strategies:
-    excelent:
-        - say "me da mucho gusto que estés bien"
-    sorry:
-        - say "siento que no te encuentres bien"
-    something_else:
-        - say "creo que me dijiste algo que no entiendo bien"
+  saludar:
+    - sleep 1 # Just wait for a second when only greeting
+    - say GREET
+    - say "me enviaron con usted para que me oriente ..."
 
-slots:
-  options: 
-    bien: good
-    mal: bad
+  escuchar:
+    - listen interaccion
 
 script:
+  - solve saludar
+  - solve escuchar
   - info slots
-  - tag "Saludo"
-  - say GREET
-  - llm wheather_opening | say
-  - if not name then solve name
-  - tag "Preguntas" "Se hacen algunas preguntas para establecer report"
-  - say "¿como estás hoy, {name}?"
-  - listen status | .keyword options | set status
-  - if status == "good" then solve excelent
-  - if status == "bad" then solve sorry
-  - if not status == "good" or status == "bad" then solve something_else
+  - llm:
+      system: v1_tipo
+      user: interaccion
+      output: tipo_interaccion
+  - info slots
+  - say "Creo que quisiste decir algo como {tipo_interaccion}"
+

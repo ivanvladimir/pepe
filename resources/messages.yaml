@@ -1,4 +1,7 @@
 GREET:
     - MSG:
         - TEXT: |
-            Hola soy **{_settings['_name_system']}**,
+            Hola soy **José González**,
+    - MSG:
+        - TEXT: |
+            Buena tarde, soy **José González**,

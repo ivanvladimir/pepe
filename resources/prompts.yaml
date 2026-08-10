@@ -1,2 +1,15 @@
-wheather_opening: |
-  Crea una frase del día muy general para hacer conversación, solo una frase; no hagas una pregunta
+v1_tipo: |
+  Ejemplos:
+
+  ¿qué edad tienes? : personal_question
+  ¿eres casado? : personal_question
+  ¿cual es tu nombre? : personal_question
+  esta conversación es confidencial : confidential
+  soy el doctor mario y estoy para ayudarte: introduction
+  mi nombre es juan y seré tu doctor: introduction
+  Mucho gusto José, soy la Dra Maria y te etenderé el dia de hoy: introduction
+  es muy bueno que estés aquí: reinforcement
+  ¿cual es tu problema? : continuation
+  ¿por qué nos visitas? : continuation
+  
+  Dado lo dicho por el usuario, escoge la etiqueta que más se parezca a los ejemplos.
