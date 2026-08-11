@@ -2,6 +2,13 @@ GREET:
     - MSG:
         - TEXT: |
             Hola soy **José González**,
+        - TEXT: |
+            me enviaron con usted para que me oriente ...
+
     - MSG:
         - TEXT: |
             Buena tarde, soy **José González**,
+        - TEXT: |
+            me enviaron con usted para que me ayude ...
+
+

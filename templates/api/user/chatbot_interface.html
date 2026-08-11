@@ -1,196 +1,209 @@
-{# partials/chat_session.html #}
-<div x-data="chatbotApp('{{ url_start }}', '{{ url_ws }}')" 
-     x-init="init()" 
-     @click.stop class="w-full h-full">
-    <div class="flex flex-col h-[calc(100vh-12rem)] max-w-3xl mx-auto w-full">
-        
-        {# ─── Chat Header ─── #}
-        <div class="flex items-center justify-between px-4 py-3 border-b border-base-300 bg-base-200/50 rounded-t-2xl">
-            <div class="flex items-center gap-3">
-                <div class="avatar placeholder">
-                    <div class="bg-primary text-primary-content w-10 rounded-full">
-                        <span class="text-lg">💬</span>
-                    </div>
-                </div>
-                <div>
-                    <h2 class="font-semibold text-sm">Chat Room</h2>
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-2 h-2 rounded-full" :class="isConnected ? 'bg-success' : 'bg-error'"></div>
-                        <span class="text-xs text-base-content/60" x-text="isConnected ? 'Conectado' : 'Desconectado'"></span>
-                    </div>
-                </div>
+i{# chatbot_interface.html - Loaded via htmx #}
+<div x-data="chatbotApp('{{ url_start }}', '{{ url_ws }}', window.chatbotConfig || {})" 
+     x-cloak
+     class="flex flex-col h-[600px] max-w-3xl mx-auto bg-base-100 rounded-2xl shadow-xl border border-base-300 overflow-hidden">
+    
+    {# ─── Header ─── #}
+    <div class="flex items-center justify-between px-5 py-3 bg-base-200 border-b border-base-300">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-content font-bold">
+                <i class="fas fa-robot text-lg"></i>
             </div>
-            
-            <div class="flex items-center gap-2">
-                {# ─── Debug Mode Toggle ─── #}
-                <div class="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors"
-                     :class="debugMode ? 'bg-warning/10 border border-warning/30' : 'hover:bg-base-300/50'">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
-                         :class="debugMode ? 'text-warning' : 'text-base-content/40'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                    <span class="text-xs font-medium" :class="debugMode ? 'text-warning' : 'text-base-content/40'">Debug</span>
-                    <input type="checkbox" class="toggle toggle-sm toggle-warning" x-model="debugMode">
+            <div>
+                <h2 class="font-semibold text-base-content" x-text="roomName"></h2>
+                <div class="flex items-center gap-1.5 text-xs">
+                    <span class="w-2 h-2 rounded-full" 
+                          :class="isConnected ? 'bg-success' : 'bg-error'"
+                          class="animate-pulse"></span>
+                    <span :class="isConnected ? 'text-success' : 'text-error'" 
+                          x-text="isConnected ? 'Connected' : 'Disconnected'"></span>
                 </div>
-                
-                <div class="divider divider-vertical h-6 before:bg-base-300 after:bg-base-300"></div>
-                
-                <button type="button" class="btn btn-ghost btn-sm btn-square" @click="clearChat()" title="Limpiar chat">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                </button>
-                
-                <button type="button" class="btn btn-ghost btn-sm btn-square" @click="exportChat()" title="Exportar chat">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                </button>
             </div>
         </div>
         
-        {# ─── Messages Area ─── #}
-        <div x-ref="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 chat-scroll bg-base-100">
-            
-            <template x-if="messages.length === 0">
-                <div class="flex flex-col items-center justify-center h-full text-center px-4">
-                    <div class="mb-6">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-4xl">💬</span></div>
-                        <h3 class="text-xl font-semibold mb-2">¡Hola!</h3>
-                        <p class="text-base-content/60 max-w-md">Tu conexión segura está lista. Envía un mensaje para empezar a chatear.</p>
-                    </div>
-                </div>
+        <div class="flex items-center gap-2">
+            {# Debug Toggle - Only shown if showDebug is true #}
+            <template x-if="showDebug">
+                <button @click="debugMode = !debugMode" 
+                        class="btn btn-ghost btn-sm btn-circle"
+                        :class="debugMode ? 'btn-primary' : ''"
+                        :title="debugMode ? 'Hide debug info' : 'Show debug info'">
+                    <i class="fas fa-bug" :class="debugMode ? 'text-primary-content' : ''"></i>
+                </button>
             </template>
             
-            <template x-for="msg in messages" :key="msg.id">
-                <div class="msg-enter">
-                    
-                    {# ─── SYSTEM (Local UI states like Connecting...) ─── #}
-                    <template x-if="msg.type === 'system'">
-                        <div class="flex justify-center">
-                            <div class="alert py-1.5 px-4 text-xs" :class="{ 'alert-info': msg.sysType === 'info', 'alert-warning': msg.sysType === 'warning', 'alert-error': msg.sysType === 'error' }">
-                                <span x-html="msg.content"></span>
-                            </div>
+            {# Export Button - Only shown if showExport is true #}
+            <template x-if="showExport">
+                <button @click="exportChat()" 
+                        class="btn btn-ghost btn-sm btn-circle"
+                        title="Export chat">
+                    <i class="fas fa-download"></i>
+                </button>
+            </template>
+            
+            {# Clear Chat - Always visible #}
+            <button @click="clearChat()" 
+                    class="btn btn-ghost btn-sm btn-circle"
+                    title="Clear chat">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    </div>
+    
+    {# ─── Messages Container ─── #}
+    <div x-ref="chatMessages" 
+         class="flex-1 overflow-y-auto p-4 space-y-3 chat-scroll">
+        
+        <template x-for="msg in messages" :key="msg.id">
+            <div>
+                {# ─── System Messages ─── #}
+                <template x-if="msg.type === 'system'">
+                    <div class="flex justify-center msg-enter">
+                        <div class="px-4 py-2 rounded-full text-xs max-w-md text-center"
+                             :class="{
+                                 'bg-base-200 text-base-content/70': msg.sysType === 'info',
+                                 'bg-warning/10 text-warning': msg.sysType === 'warning',
+                                 'bg-error/10 text-error': msg.sysType === 'error',
+                                 'bg-success/10 text-success': msg.sysType === 'success'
+                             }"
+                             x-text="msg.content">
                         </div>
-                    </template>
-
-                     {# ─── DIVIDER (Name + Optional Message) ─── #}
-                    <template x-if="msg.type === 'divider'">
-                        <div x-show="debugMode" class="my-2" style="display: none;">
-                            {# Divider Line and Tag Name #}
-                            <div class="flex items-center gap-3">
-                                <div class="flex-1 h-px bg-warning/30"></div>
-                                <span class="text-[10px] text-warning/60 font-mono uppercase tracking-widest flex items-center gap-1.5" x-text="msg.tag || 'debug step'"></span>
-                                <div class="flex-1 h-px bg-warning/30"></div>
+                    </div>
+                </template>
+                
+                {# ─── Chat Messages ─── #}
+                <template x-if="msg.type === 'message'">
+                    <div class="flex msg-enter" :class="msg.side === 'user' ? 'justify-end' : 'justify-start'">
+                        <div class="max-w-[80%] group relative"
+                             :class="msg.side === 'user' ? 'order-1' : 'order-1'">
+                            
+                            {# User label #}
+                            <div class="text-xs mb-1 px-1" 
+                                 :class="msg.side === 'user' ? 'text-right text-base-content/50' : 'text-left text-base-content/50'"
+                                 x-text="msg.user + ' · ' + msg.timestamp">
                             </div>
                             
-                            {# Optional Message associated with the divider #}
-                            <div x-show="msg.message" 
-                                 x-transition
-                                 class="text-center text-[11px] text-base-content/50 mt-1.5 px-4 whitespace-pre-wrap break-words"
-                                 x-html="msg.message">
+                            {# Message bubble #}
+                            <div class="px-4 py-2.5 rounded-2xl prose prose-sm max-w-none relative"
+                                 :class="msg.side === 'user' 
+                                     ? 'bg-primary text-primary-content rounded-br-md' 
+                                     : 'bg-base-200 text-base-content rounded-bl-md'"
+                                 :class="{ 'user-typing-cursor': msg.isAnimating }">
+                                <span x-html="msg.content"></span>
                             </div>
+                            
+                            {# Copy button on hover #}
+                            <button @click="copyMessage(msg.content)" 
+                                    class="absolute -top-2 opacity-0 group-hover:opacity-100 transition-opacity btn btn-xs btn-circle bg-base-300 border-base-content/20 shadow-md"
+                                    :class="msg.side === 'user' ? '-left-8' : '-right-8'"
+                                    title="Copy message">
+                                <i class="fas fa-copy text-xs"></i>
+                            </button>
                         </div>
-                    </template>
-
-                    {# ─── TAGS (Flattened & Color-Coded) ─── #}
-                    <template x-if="msg.type === 'tags'">
-                        <div x-show="debugMode" class="px-1 py-1" style="display: none;">
-                            <div class="flex flex-wrap gap-1.5">
-                                <template x-for="tag in msg.tags" :key="tag.key + tag.value">
-                                    <!-- Dynamically apply color classes based on the tag's assigned color -->
-                                    <div class="badge badge-ghost badge-sm gap-1 font-mono text-[10px]"
-                                         :class="`border-${tag.color}/20 bg-${tag.color}/10 text-${tag.color}/80`">
-                                        <span class="font-semibold opacity-60" x-text="tag.key"></span>
-                                        <span class="opacity-40">=</span>
-                                        <span x-text="tag.value"></span>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-                    
-                    {# ─── MESSAGE: USER (Right Side) ─── #}
-                    <template x-if="msg.type === 'message' && msg.side === 'user'">
-                        <div class="chat chat-end">
-                            <div class="chat-header opacity-50 text-xs mb-1">
-                                <time x-text="msg.timestamp" class="text-xs opacity-50"></time>
-                                <span x-text="msg.user || 'Tú'"></span>
-                            </div>
-                            <div class="chat-bubble chat-bubble-primary">
-                                <p class="whitespace-pre-wrap" x-text="msg.content"></p>
-                            </div>
-                            <div class="chat-footer opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button type="button" class="btn btn-ghost btn-xs" @click="copyMessage(msg.content)" title="Copiar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </template>
-                    
-                    {# ─── MESSAGE: OTHER/BOT (Left Side, renders HTML) ─── #}
-                    <template x-if="msg.type === 'message' && msg.side === 'other'">
-                        <div class="chat chat-start group">
-                            <div class="chat-image avatar placeholder">
-                                <div class="bg-neutral text-neutral-content w-8 rounded-full">
-                                    <span class="text-xs font-bold" x-text="msg.user?.charAt(0).toUpperCase() || '?'"></span>
-                                </div>
-                            </div>
-                            <div class="chat-header opacity-50 text-xs mb-1">
-                                <span x-text="msg.user || 'Sistema'"></span>
-                                <time x-text="msg.timestamp" class="text-xs opacity-50"></time>
-                            </div>
-                            <div class="chat-bubble">
-                                <div class="whitespace-pre-wrap break-words" x-html="msg.content"></div>
-                            </div>
-                            <div class="chat-footer opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button type="button" class="btn btn-ghost btn-xs" @click="copyMessage(msg.content)" title="Copiar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </template>
-                    
-                </div>
-            </template>
-        </div>
-
-        {# ─── Input Area ─── #}
-        <div class="border-t border-base-300 p-3 bg-base-200/50 rounded-b-2xl">
-            
-            {# 1. Thinking State (Input is HIDDEN) #}
-            <div x-show="isThinking" x-transition class="flex items-center justify-center gap-3 py-4" style="display: none;">
-                <span class="loading loading-dots loading-sm text-primary"></span>
-                <span class="text-sm text-base-content/60 italic">El sistema está pensando...</span>
-            </div>
-
-            {# 2. Listening/Waiting State (Input is VISIBLE, Banner is SHOWN above it) #}
-            <div x-show="isListening && !isThinking" x-transition class="flex items-center justify-center gap-2 mb-2 pb-2 border-b border-info/20" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-info animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                </svg>
-                <span class="text-xs text-info font-medium">El sistema está esperando tu entrada...</span>
-            </div>
-
-            {# 3. Normal Input State (Hidden ONLY when Thinking) #}
-            <div x-show="!isThinking" x-transition class="flex items-end gap-2" style="display: none;">
-                <div class="dropdown dropdown-top dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm" :class="{ 'btn-primary': showEmojiPicker }">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                    <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow-lg bg-base-100 rounded-box w-64 grid grid-cols-6 gap-1" @click.away="showEmojiPicker = false">
-                        <template x-for="emoji in getEmojis()" :key="emoji">
-                            <button type="button" class="btn btn-ghost btn-sm text-xl p-0 w-10 h-10" @click="insertEmoji(emoji)" x-text="emoji"></button>
+                </template>
+                
+                {# ─── Dividers (Debug Mode) ─── #}
+                <template x-if="msg.type === 'divider' && debugMode">
+                    <div class="flex flex-col items-center my-4 msg-enter">
+                        <div class="flex items-center gap-3 w-full">
+                            <div class="flex-1 h-px bg-base-300"></div>
+                            <span class="px-3 py-1 bg-base-200 rounded-full text-xs font-mono text-base-content/60 border border-base-300"
+                                  x-text="msg.tag || 'STEP'">
+                            </span>
+                            <div class="flex-1 h-px bg-base-300"></div>
+                        </div>
+                        <div x-if="msg.message" class="mt-2 text-xs text-base-content/50 italic max-w-md text-center" x-html="msg.message"></div>
+                    </div>
+                </template>
+                
+                {# ─── Tags (Debug Mode) ─── #}
+                <template x-if="msg.type === 'tags' && debugMode">
+                    <div class="flex flex-wrap gap-1.5 justify-center msg-enter">
+                        <template x-for="tag in msg.tags" :key="tag.key + tag.value">
+                            <span class="badge badge-sm border-0"
+                                  :class="'badge-' + tag.color"
+                                  x-text="tag.key + ': ' + tag.value">
+                            </span>
                         </template>
-                    </ul>
+                    </div>
+                </template>
+            </div>
+        </template>
+        
+        {# ─── Thinking Indicator ─── #}
+        <template x-if="isThinking">
+            <div class="flex justify-start msg-enter">
+                <div class="bg-base-200 px-4 py-3 rounded-2xl rounded-bl-md flex items-center gap-2">
+                    <span class="text-xs text-base-content/50">Thinking</span>
+                    <div class="flex gap-1">
+                        <div class="w-1.5 h-1.5 bg-base-content/40 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-base-content/40 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-base-content/40 rounded-full typing-dot"></div>
+                    </div>
                 </div>
-                
-                <div class="flex-1 relative">
-                    <textarea x-ref="chatInput" x-model="inputText" @keydown="handleKeyDown($event)" placeholder="Escribe tu mensaje..." class="chat-input textarea textarea-bordered w-full rounded-xl pr-12" rows="1" :disabled="!isConnected" :class="{ 'textarea-primary': inputText.length > 0, 'textarea-info': isListening }"></textarea>
+            </div>
+        </template>
+        
+        {# ─── Listening Banner ─── #}
+        <template x-if="isListening">
+            <div class="flex justify-center msg-enter">
+                <div class="px-4 py-2 rounded-full bg-secondary/10 text-secondary text-xs flex items-center gap-2 border border-secondary/20">
+                    <i class="fas fa-ear-listen animate-pulse"></i>
+                    <span>Waiting for your input...</span>
                 </div>
-                
-                <button type="button" class="btn btn-primary btn-circle" @click="sendMessage()" :disabled="!inputText.trim() || !isConnected">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+            </div>
+        </template>
+    </div>
+    
+    {# ─── Input Area ─── #}
+    <div class="border-t border-base-300 p-4 bg-base-200/50">
+        <div class="flex items-end gap-2">
+            {# Emoji Picker Toggle #}
+            <div class="relative">
+                <button @click="showEmojiPicker = !showEmojiPicker" 
+                        class="btn btn-ghost btn-sm btn-circle"
+                        :class="showEmojiPicker ? 'btn-primary' : ''">
+                    <i class="fas fa-face-smile"></i>
                 </button>
+                
+                {# Emoji Dropdown #}
+                <div x-show="showEmojiPicker" 
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     @click.outside="showEmojiPicker = false"
+                     class="absolute bottom-full left-0 mb-2 p-3 bg-base-100 rounded-xl shadow-xl border border-base-300 flex flex-wrap gap-1 w-56 z-50">
+                    <template x-for="emoji in getEmojis()" :key="emoji">
+                        <button @click="insertEmoji(emoji)" 
+                                class="text-2xl hover:bg-base-200 rounded p-1 transition-colors"
+                                x-text="emoji">
+                        </button>
+                    </template>
+                </div>
             </div>
             
-            <p class="text-center text-[10px] text-base-content/40 mt-2">Enter para enviar · Shift+Enter para nueva línea</p>
+            {# Text Input #}
+            <div class="flex-1 relative">
+                <textarea x-ref="chatInput"
+                          x-model="inputText"
+                          @keydown="handleKeyDown($event)"
+                          :disabled="!isConnected || isThinking"
+                          placeholder="Type your message..."
+                          class="chat-input w-full textarea textarea-bordered rounded-xl pr-12 bg-base-100 focus:textarea-primary"
+                          rows="1"></textarea>
+            </div>
+            
+            {# Send Button #}
+            <button @click="sendMessage()" 
+                    :disabled="!isConnected || !inputText.trim() || isThinking"
+                    class="btn btn-primary btn-sm btn-circle"
+                    :class="{ 'opacity-50 cursor-not-allowed': !isConnected || !inputText.trim() || isThinking }">
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
     </div>
 </div>

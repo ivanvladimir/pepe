@@ -12,21 +12,39 @@ prompts:
 
 strategies:
   saludar:
-    - sleep 1 # Just wait for a second when only greeting
     - say GREET
-    - say "me enviaron con usted para que me oriente ..."
 
-  escuchar:
-    - listen interaccion
+  despedida:
+    - say "Me despido del chat"
+
+  main_loop:
+    - listen intervencion_doctor
+    - llm:
+        system: main
+        user: intervencion_doctor
+        output: respuesta_a_doctor
+    - say "{respuesta_a_doctor}"
+    - llm_extract:
+        system: ya_termino
+        user: "Termina"
+        output: finished
+    - info slots
+
+slots:
+  _finished: False
+  bio:
+    name: José González
+    age: 34
+    marital_status: casado
+    married_years: 4
+    kids: sin niños
+    wifes_name: Isabel Pérez
+  mentioned:
+    general:
+      name: José González
 
 script:
   - solve saludar
-  - solve escuchar
-  - info slots
-  - llm:
-      system: v1_tipo
-      user: interaccion
-      output: tipo_interaccion
-  - info slots
-  - say "Creo que quisiste decir algo como {tipo_interaccion}"
+  - while not _finished then solve main_loop
+  - solve despedida
 
