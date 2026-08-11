@@ -25,26 +25,29 @@ strategies:
         output: respuesta_a_doctor
     - say "{respuesta_a_doctor}"
     - llm_extract:
-        system: ya_termino
-        user: "Termina"
-        output: finished
+        system: extract_info
+        user: intervencion_doctor
+        output: _finished
     - info slots
 
 slots:
   _finished: False
   bio:
     name: José González
-    age: 34
+    age: 30
     marital_status: casado
+    ocupation: repartidor en empresa de paqueteria
     married_years: 4
-    kids: sin niños
+    kids: 1 
+    kids_ages: 3
     wifes_name: Isabel Pérez
+    household_situation: departamento rentado
   mentioned:
     general:
       name: José González
 
 script:
   - solve saludar
-  - while not _finished then solve main_loop
+  - while _finished == False then solve main_loop
   - solve despedida
 
