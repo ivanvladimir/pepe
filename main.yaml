@@ -51,3 +51,10 @@ script:
   - while _finished == False then solve main_loop
   - solve despedida
 
+cleanup:
+  - llm "Haz un resumen de breve de la conversación." resumen
+  - save_document:
+      title: "Resumen"
+      kind: "ia"
+      variable: resumen
+      tags: [summary, summary_ia]
