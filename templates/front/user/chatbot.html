@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Chatbot {{script}}{% endblock %}
+{% block title %}{{ chat_room_name|default('Chatbot') }} - {{script}}{% endblock %}
 
 {% block head %}
 <style>
@@ -22,11 +22,27 @@
     
     .streaming-cursor::after { content: '▊'; animation: blink 1s infinite; color: oklch(var(--p)); }
     @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-    
+
     .chat-input { resize: none; field-sizing: content; min-height: 44px; max-height: 150px; }
 </style>
+
+{# Pass configuration to JavaScript #}
+<script>
+    window.chatbotConfig = {
+        roomName: "{{ chat_room_name|default('Chat Room') }}",
+        showDebug: {{ 'true' if show_debug|default(true) else 'false' }},
+        showExport: {{ 'true' if show_export|default(true) else 'false' }},
+        enableUserTypingAnimation: {{ 'true' if enable_user_typing|default(true) else 'false' }},
+        userTypingSpeed: {{ user_typing_speed|default(25) }}
+    };
+</script>
 {% endblock %}
 
+{% block general_content %}
+<div class="alert alert-error max-w-3xl mx-auto mb-4">
+  <span>Esta conversación se graba con fines de evaluar el desempeño del chatbot. Más información <a href="{{url_for("page_project", view="information", username=username, script=script) }}">aquí</a></span>
+</div>
+{% endblock %}
 
 {% if notlogged_content %}
 {% block notlogged_content %}
@@ -37,14 +53,16 @@
 {%endif%}
 
 {% block protected_htmx_config %}
-hx-post="{{ url_for('chatbot_interface', script=script, username=username) if username else request.url_for('chatbot_interface_', script=script) }}"
-|hx-trigger="load-protected"
+hx-post="{{ url_for('chatbot_interface', script=script, username=username) if username else request.url_for('chatbot_interface_', script=script) }}" 
+hx-trigger="load-protected"
 hx-swap="innerHTML"
 hx-target="this"
 hx-indicator="#protected-loading"
 {% endblock %}
 
-{% block protected_content_content %}
+{% block protected_content %}
+
+
 <div class="flex flex-col h-[600px] max-w-3xl mx-auto">
     <div class="flex-1 overflow-y-auto p-4 space-y-4">
         <div class="flex justify-start"><div class="skeleton w-64 h-20 rounded-2xl"></div></div>
