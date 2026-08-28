@@ -1,56 +1,144 @@
-<footer class="bg-base-200 text-base-content p-10 mt-auto w-full">
-    <div class="footer max-w-screen-2xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-        <aside>
-            <p class="text-xl font-bold">PEPE</p>
-            <p class="text font-bold">Programa de Entrenamiento con Pacientes Estandarizados</p>
-        </aside>
-        <nav>
-            <ul class="space-y-4">
-                <li>
-                    <a href="{{url_for('static',path='umiiba.jpg')}}" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='umiiba.png')}}" alt="UMIIBA">
-                        <span>UMIIBA</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.psicologia.unam.mx/" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='psicología.png')}}" alt="Facultad de Psicología">
-                        <span>Facultad de Psicología</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <nav>
-            <ul class="space-y-4">
-                <li>
-                    <a href="https://l52mas.gitlab.io/" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='l52mas.png')}}" alt="Laboratorio L52+">
-                        <span>Laboratorio L52+</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.iimas.unam.mx/" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='iimas.png')}}" alt="IIMAS">
-                        <span>IIMAS</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <nav>
-            <ul class="space-y-4">
-                <li>
-                    <a href="https://www.unam.mx/" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='unam.png')}}" alt="UNAM">
-                        <span>UNAM</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://fundaciongonzalorioarronte.org/" class="flex items-center gap-3 link link-hover">
-                        <img height="30" src="{{url_for('static',path='rio_arronte.png')}}" alt="Fundación Río Arronte">
-                        <span>Fundación Río Arronte</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+<style>
+  .pepe-footer {
+    background: var(--b2, #1e293b);
+    color: var(--bc, #e2e8f0);
+    border-top: 1px solid var(--b3, #334155);
+    width: 100%;
+    margin-top: auto;
+  }
+  .pepe-footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2.5rem 2.5rem;
+  }
+  @media (min-width: 640px) {
+    .pepe-footer-inner {
+      grid-template-columns: 1fr 1.4fr 1fr;
+    }
+  }
+  .pepe-footer .brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .pepe-footer .brand-sub {
+    font-size: .85rem;
+    opacity: .55;
+    margin-top: .25rem;
+    line-height: 1.6;
+  }
+  .pepe-footer h6 {
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    opacity: .4;
+    margin-bottom: .75rem;
+    font-weight: 600;
+  }
+  .pepe-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .pepe-footer ul li {
+    margin-bottom: .4rem;
+  }
+  .pepe-footer ul a {
+    color: inherit;
+    text-decoration: none;
+    font-size: .85rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    opacity: .85;
+    transition: opacity .15s;
+  }
+  .pepe-footer ul a:hover {
+    opacity: .6;
+  }
+  .pepe-footer ul a img {
+    height: 22px;
+    object-fit: contain;
+  }
+  .pepe-footer .section-gap {
+    margin-top: 1.25rem;
+  }
+  .pepe-footer-bottom {
+    border-top: 1px solid var(--b3, #334155);
+    padding: 1rem 2.5rem;
+    text-align: center;
+    font-size: .7rem;
+    opacity: .35;
+  }
+</style>
+
+<footer class="pepe-footer">
+  <div class="pepe-footer-inner">
+
+    <div>
+      <p class="brand-name">PEPE</p>
+      <p class="brand-sub">Programa de Entrenamiento con Pacientes Estandarizados</p>
     </div>
+
+    <nav>
+      <h6>Instituciones</h6>
+      <ul>
+        <li>
+          <a href="{{url_for('static',path='umiiba.jpg')}}">
+            <img src="{{url_for('static',path='umiiba.png')}}" alt="UMIIBA">
+            <span>UMIIBA</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.psicologia.unam.mx/">
+            <img src="{{url_for('static',path='psicología.png')}}" alt="Facultad de Psicología">
+            <span>Fac. de Psicología</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://l52mas.gitlab.io/">
+            <img src="{{url_for('static',path='l52mas.png')}}" alt="Laboratorio L52+">
+            <span>Laboratorio L52+</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.iimas.unam.mx/">
+            <img src="{{url_for('static',path='iimas.png')}}" alt="IIMAS">
+            <span>IIMAS</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.unam.mx/">
+            <img src="{{url_for('static',path='unam.png')}}" alt="UNAM">
+            <span>UNAM</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://fundaciongonzalorioarronte.org/">
+            <img src="{{url_for('static',path='rio_arronte.png')}}" alt="Fundación Río Arronte">
+            <span>Fundación Río Arronte</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <nav>
+      <h6>Legal</h6>
+      <ul>
+        <li><a href="#">Aviso de privacidad integral</a></li>
+        <li><a href="#">Aviso de privacidad simplificado</a></li>
+      </ul>
+      <h6 class="section-gap">Contacto</h6>
+      <ul>
+        <li><a href="mailto:pepe@algo.unam.mx">pepe@algo.unam.mx</a></li>
+      </ul>
+    </nav>
+
+  </div>
+  <div class="pepe-footer-bottom">
+    Hecho en la UNAM &middot; Este proyecto es de carácter académico y experimental
+  </div>
 </footer>
