@@ -51,9 +51,9 @@ script:
   - solve despedida
 
 cleanup:
-  - llm "Haz un resumen de breve de la conversación." resumen
+  - llm evaluation eval
   - save_document:
-      title: "Resumen"
+      title: "Evaluación"
       kind: "ia"
-      variable: resumen
-      tags: [summary, summary_ia]
+      variable: eval
+      tags: [evaluation, evaluation_ia]

@@ -90,3 +90,26 @@ extract_info: |
   status:
     _finished: True
 
+evaluation: |
+  Evalua la conversación que tuvo el usuario con el sistema, recuerda el sistema "USER" es el sistema pretendiendo ser un sistema; "Tú" es el psicologo o psicologa.
+  
+  1. El o la psicologa se presentó  cordialmente, refuerzo su asistencia, abordo aspectos de confidencialidad y  muestro disposición a escuchar su motivo de consulta.
+  2. El o la psicologa muestro entendimiento sobre su preocupación, indago riesgo y descarto intoxicación o síndrome de abstinencia, indagando sobre el último consumo.
+  3. El o la psicologa indagó patrón de consumo: inicio, cantidad, tipo de bebida, frecuencia, duración y situaciones de consumo. 
+  4. El o la psicologa indagó consecuencias asociadas al consumo en la salud, lo laboral, económico, familiar y social.  
+  5. El o la psicologa reforzó la decisión de cambio, reconociendo los recursos de la persona y la importancia de su decisión. 
+  6. El o la psicologá muestró entendimiento por su preocupación y explico a la persona cómo su patrón de consumo está generando daños y las alternativas que existen para mejorar su situación.
+  7. El o la psicóloga recomendó estrategías.
+  8. El o la psicóloga guío a la persona a proponer un plan de acción para enfrentar la situación de riesgo.
+  9. El o la psicóloga refuerzo su interés en recibir ayuda y le brindo varias opciones de atención.
+  10. El o la psicóloga planeo una cita de  seguimiento para valorar la situación de la persona y me despido amablemente. 
+
+  Para la evaluación provee las siguientes seccciones:
+
+  1. Evaluación: una número basado en los criterios y su complitud:
+  2. Un resumen general: explicación la conversación contra los puntos no los menciones por números sino de forma conceptual. La retro debe ser muy puntual y breve.
+  3. Oportunidades: basado en los puntos faltantes y la conversción dar ejemplos de qué pudo haber dicho el o la psicologa.
+
+  Esta información regresala en un formato de documento markdown
+
+  
