@@ -1,6 +1,3 @@
-conversations:
-  - stage1.yaml
-
 plugins:
   - filters.py
 
@@ -19,6 +16,7 @@ strategies:
 
   main_loop:
     - listen intervencion_doctor
+    - .build_shared_info mentioned | set shared_info
     - llm:
         system: main
         user: intervencion_doctor
@@ -32,6 +30,7 @@ strategies:
 
 slots:
   _finished: False
+  shared_info: ""
   bio:
     name: José González
     age: 30

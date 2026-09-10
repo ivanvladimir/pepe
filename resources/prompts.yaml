@@ -28,7 +28,7 @@ main: |
 
   La información que has compartido hasta ahora con el psicólogo es la siguiente:
 
-  SHARED_INFO
+  {shared_info}
 
   Dado lo que el usuario dice puedes:
 
