@@ -331,6 +331,7 @@
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                   <li><a href="{{url_for("page_project", view="main", username=username, script=script) }}">Home</a></li>
+                  <li><a href="{{url_for("page_project", view="ficha", username=username, script=script) }}">Ficha expediente</a></li>
                   <li><a href="{{url_for("page_project", view="information", username=username, script=script) }}">Información</a></li>
                   <li><a href="{{url_for("page_project", view="help", username=username, script=script) }}">Ayuda</a></li>
                 </ul>
@@ -345,6 +346,7 @@
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <li><a href="{{url_for("page_project", view="main", username=username, script=script) }}">Home</a></li>
+                <li><a href="{{url_for("page_project", view="ficha", username=username, script=script) }}">Ficha expediente</a></li>
                 <li><a href="{{url_for("page_project", view="information", username=username, script=script) }}">Información</a></li>
                 <li><a href="{{url_for("page_project", view="help", username=username, script=script) }}">Ayuda</a></li>
             </ul>
@@ -909,6 +911,7 @@
         window.chatvoiceUrlFor = {
             main_pepe: "{{ url_for('page_project', username=username, script=script, view='main') }}",
             chat_pepe: "{{ url_for('chat', username=username, script=script) }}",
+            conversations_pepe: "{{ url_for('conversations_page') }}",
         };
     </script>
     <script>

@@ -17,12 +17,6 @@ title: Información de experimento
     <li>Cuestionario.</li>
   </ol>
 
-  <h4>Usuarios</h4>
-  <p>
-    Se reclutaron estudiantes&nbsp;…
-    <!-- Completar con los detalles del reclutamiento -->
-  </p>
-
   <h4>Cuentas</h4>
   <p>
     A cada estudiante que aceptó formar parte del experimento se le asignó
@@ -37,14 +31,12 @@ title: Información de experimento
 
   <h4>Conversación</h4>
   <p>
-    La conversación consiste en la simulación de una consulta. El usuario
-    tiene que pretender ser un psicólogo que atiende a un paciente siguiendo
-    los protocolos de intervenciones breves. Al final de la conversación se
-    genera una retroalimentación general sobre la forma en que se llevó a
-    cabo la consulta.
+Esta plataforma es un entorno de simulación clínica en la que interactuarás con nuestro chatbot PEPE, un paciente virtual. Tu objetivo como profesional de la salud es asumir el rol de terapeuta y conducir una Intervención Breve estructurada en las fases de: Evaluación, Manejo y Seguimiento.
   </p>
+
   <p>
-    El usuario puede acceder al histórico de conversaciones y evaluaciones
+Al finalizar la sesión, el sistema analizará la interacción y generará una retroalimentación automatizada sobre tu desempeño.
+    Podrás acceder al histórico de conversaciones y evaluaciones
     generadas usando la opción de <em>"Mis conversaciones"</em> en el menú
     del usuario ubicado en la parte superior derecha.
   </p>
@@ -56,22 +48,17 @@ title: Información de experimento
     sobre la usabilidad del sistema.
   </p>
 
-  <h4>Equipo experimental</h4>
+  <h4>Contacto</h4>
   <div class="team-grid">
     <div class="team-card">
-      <span class="role">Investigador principal</span>
-      <span class="name">Nombre apellido</span>
+      <span class="role">Dudas sobre la actividad</span>
+      <span class="name"><a href="mailto:seguimiento.implementacion.mhgap@gmail.com">aquí</a> o <a href="mailto:trianamario19@gmail.com">aquí</a></span>
     </div>
     <div class="team-card">
-      <span class="role">Desarrollo</span>
-      <span class="name">Nombre apellido</span>
+      <span class="role">Reportes sobre servicio web</span>
+      <span class="name"><a href="mailto:ivanvladimir+pepe@gmail.com">aquí</a></span>
     </div>
-    <div class="team-card">
-      <span class="role">Asesoría</span>
-      <span class="name">Nombre apellido</span>
-    </div>
-    <!-- Agregar más tarjetas según sea necesario -->
   </div>
-
+ 
 </div>
 

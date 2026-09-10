@@ -11,16 +11,14 @@ title: Principal
   </h3>
 
   <p>
-    PEPE es un chatbot para el entrenamiento en Intervenciones Breves en Salud
-    Mental y Adicciones, desarrollado por
+PEPE es un chatbot diseñado como paciente virtual para el entrenamiento y práctica clínica en Intervenciones Breves sobre Salud Mental y Adicciones. Un proyecto desarrollado en colaboración por
     <a href="https://sites.google.com/view/umiiba/inicio">UMIIBA</a> de la
     <a href="https://www.psicologia.unam.mx/">Facultad de Psicología</a> y el
     <a href="https://www.iimas.unam.mx">IIMAS</a> de la UNAM.
   </p>
 
   <p>
-    En este momento se realiza una evaluación de las capacidades de PEPE, por
-    lo que no es posible obtener una cuenta más que por invitación.
+    Actualmente el sistema se encuentra en fase de evaluación, por lo que el acceso está limitado exclusivamente a usuarios invitados.
   </p>
 
   <p style="margin-bottom:0">Si tienes una cuenta, puedes iniciar aquí</p>
